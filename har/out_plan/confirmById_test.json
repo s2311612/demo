@@ -1,0 +1,69 @@
+{
+    "config": {
+        "name": "testcase description"
+    },
+    "teststeps": [
+        {
+            "name": "",
+            "request": {
+                "method": "POST",
+                "url": "http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/pick/exe/confirmByWaveId",
+                "headers": {
+                    "Accept": "application/json",
+                    "Accept-Encoding": "gzip, deflate",
+                    "Accept-Language": "zh-CN,zh;q=0.9",
+                    "Connection": "keep-alive",
+                    "Content-Length": "113",
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Host": "test.asura-wms.ruigushop.com",
+                    "Origin": "http://test.asura-wms.ruigushop.com",
+                    "Referer": "http://test.asura-wms.ruigushop.com/static/wms/out/wave",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+                    "bid": "1528936961052135425",
+                    "businesscode": "RG20",
+                    "businessname": "%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93",
+                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIzMTkxNjg5Njc3MzI0Njk3OCIsInJlYWxOYW1lIjoiemhlbmdqaXgiLCJ1bmFtZSI6InpqeCIsInVzZXJPcGVyYXRpb24iOjEsImNsaWVudCI6IlBDIiwiaXNBZG1pbiI6MSwiYXBwQ29kZSI6IldNUyIsImV4cCI6MTY3MDQxMTQ2MzY0NywiYml6R3JvdXBDb2RlIjoiYXN1cmEtd21zLWNsdXN0ZXIifQ.oLJR2evw6PRvMbMY-C3pQFgnFii-11k1t1T2NB71lBs",
+                    "trace.id": "7b01ae93-5c82-6c2b-fd51-2e34d2873b36"
+                },
+                "body": {
+                    "pickUserAccount": "zjx",
+                    "pickUserId": "31916896773246978",
+                    "pickUserName": "zhengjix",
+                    "waveId": "92347828327686146"
+                }
+            },
+            "validate": [
+                {
+                    "check": "status_code",
+                    "assert": "equals",
+                    "expect": 200,
+                    "msg": "assert response status code"
+                },
+                {
+                    "check": "headers.\"Content-Type\"",
+                    "assert": "equals",
+                    "expect": "application/json",
+                    "msg": "assert response header Content-Type"
+                },
+                {
+                    "check": "body.code",
+                    "assert": "equals",
+                    "expect": "0000000",
+                    "msg": "assert response body code"
+                },
+                {
+                    "check": "body.data",
+                    "assert": "equals",
+                    "expect": null,
+                    "msg": "assert response body data"
+                },
+                {
+                    "check": "body.msg",
+                    "assert": "equals",
+                    "expect": "操作成功",
+                    "msg": "assert response body msg"
+                }
+            ]
+        }
+    ]
+}
