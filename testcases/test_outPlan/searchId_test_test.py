@@ -57,6 +57,11 @@ class TestCaseSearchidTest(HttpRunner):
                 .extract()
                 .with_jmespath("usable_qty", "usable_qty") #可用数量
                 .with_jmespath("occupy_qty", "occupy_qty") #占用数量
+        ),
+        Step(
+                RunSqlRequest("查询已拣数量")
+                .fetchone("select * from asura_wms_005.inv_inventory where sku_code = $skuCodes and bin_code = 'picking';")
+                .extract()
                 .with_jmespath("picked_qty", "picked_qty") #已拣数量
         )
     ]

@@ -15,7 +15,7 @@ from testcases.test_outPlan.searchId_test_test import (
 
 class TestCaseAllocateByidTest(HttpRunner):
 
-    config = (Config("分配后所有校验及取值").export(*["order_id"])
+    config = (Config("分配后所有校验及取值").export(*["order_id","id","skuQty", "picked_qty"])
               .db()
               .user('asura')
               .password("asura")
@@ -24,7 +24,7 @@ class TestCaseAllocateByidTest(HttpRunner):
               .database("asura_wms_005"))
 
     teststeps = [
-        Step(RunTestCase("查询ID").call(SearchidTest).export(*["id", "skuCodes", "usable_qty", "occupy_qty", "skuQty"])),
+        Step(RunTestCase("查询ID").call(SearchidTest).export(*["id", "skuCodes", "usable_qty", "occupy_qty", "skuQty", "picked_qty"])),
         Step(
             RunRequest("分配并校验")
             .post(
@@ -46,7 +46,7 @@ class TestCaseAllocateByidTest(HttpRunner):
             .assert_equal("body.msg", "操作成功", "assert response body msg")
         ),
         Step(
-            RunSqlRequest("校验分配状态")
+                RunSqlRequest("校验分配状态")
                 .fetchone("select * from asura_wms_005.out_plan where id = $id;")
                 .extract()
                 .with_jmespath("pass_status", "pass_status")
@@ -54,14 +54,14 @@ class TestCaseAllocateByidTest(HttpRunner):
                 .assert_equal("pass_status", 5)
         ),
         Step(
-            RunSqlRequest("获取出库单id")
+                RunSqlRequest("获取出库单id")
                 .fetchone("select * from asura_wms_005.out_order where plan_id = $id;")
                 .extract()
                 .with_jmespath("id", "order_id")
                 .validate()
         ),
         Step(
-            RunSqlRequest("校验库存变化状态")
+                RunSqlRequest("校验库存变化状态")
                 .fetchone("select * from asura_wms_005.inv_inventory where sku_code = $skuCodes;")
                 .extract()
                 .with_jmespath("usable_qty", "usable_qty1")
@@ -70,34 +70,6 @@ class TestCaseAllocateByidTest(HttpRunner):
                 .assert_string_equals("${sum_usable_inventory($usable_qty,$skuQty)}", "${convert_int($usable_qty1)}")
                 .assert_equal("${sum_occupy_inventory($occupy_qty,$skuQty)}", "${convert_int($occupy_qty1)}")
         ),
-        # Step(
-        #     RunRequest("开始创建波次")
-        #         .post(
-        #         "http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/wave/createWave"
-        #     )
-        #         .with_headers(
-        #         **{
-        #             "Content-Type": "application/json;charset=UTF-8",
-        #             "bid": "1528936961052135425",
-        #             "businesscode": "RG20",
-        #             "businessname": "%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93",
-        #             "token": "${ENV(token)}",
-        #             "trace.id": "1301b31d-2c2f-29e8-863b-a84d4017d592",
-        #         }
-        #     )
-        #         .with_json(
-        #         {
-        #             "orderIds": "${convert_dict($order_id)}",
-        #             "policyId": "64440030780784642",
-        #             "waveCount": 10,
-        #         }
-        #     )
-        #         .extract()
-        #         .with_jmespath("body.data.waveNo", "waveNo")
-        #         .validate()
-        #         .assert_equal("status_code", 200, "assert response status code")
-        #         .assert_equal("body.msg", "操作成功", "assert response body msg")
-        # ),
     ]
 
 

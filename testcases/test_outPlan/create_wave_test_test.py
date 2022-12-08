@@ -15,7 +15,7 @@ from testcases.test_outPlan.allocate_ById_test_test import (
 
 class TestCaseCreateWaveTest(HttpRunner):
 
-    config = (Config("创建波次").export(*["waveNo"])
+    config = (Config("创建波次").export(*["waveId","id","skuQty", "picked_qty"])
               .db()
               .user('asura')
               .password("asura")
@@ -24,7 +24,7 @@ class TestCaseCreateWaveTest(HttpRunner):
               .database("asura_wms_005"))
 
     teststeps = [
-        Step(RunTestCase("查询波次ID").call(allocateTest).export(*["order_id"])),
+        Step(RunTestCase("查询波次ID").call(allocateTest).export(*["order_id","id","skuQty", "picked_qty"])),
         Step(
             RunRequest("开始创建波次")
                 .post(
@@ -54,10 +54,18 @@ class TestCaseCreateWaveTest(HttpRunner):
                 .assert_equal("body.msg", "操作成功", "assert response body msg")
         ),
         Step(
+            RunSqlRequest("查询计划单状态")
+            .fetchone("select * from asura_wms_005.out_plan where id = $id;")
+            .extract()
+            .with_jmespath("plan_status", "plan_status")
+            .validate()
+            .assert_equal("plan_status", 3)
+        ),
+        Step(
             RunSqlRequest("查询波次id")
-                .fetchone("select * from asura_wms_005.out_wave where wave_no = '$waveNo';")
-                .extract()
-                .with_jmespath("id", "waveId")
+            .fetchone("select * from asura_wms_005.out_wave where wave_no = '$waveNo';")
+            .extract()
+            .with_jmespath("id", "waveId")
         )
     ]
 
