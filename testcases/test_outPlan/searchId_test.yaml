@@ -1,0 +1,35 @@
+config:
+    name: 出库订单流程测试
+    export: ["id"]
+teststeps:
+    - name: "查询ID"
+      request:
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/plan/listPlanUnClose
+        headers:
+            Content-Type: application/json;charset=UTF-8
+            bid: "1528936961052135425"
+            businesscode: RG20
+            businessname: '%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93'
+            token: ${ENV(token)}
+            trace.id: 3397436d-ea4e-4d74-2dcd-e34c19a83b27
+        body:
+            current: 1
+            extra: {}
+            paramsList:
+                - argValue: ${ENV(plan_no)}
+                  itemId: "6049"
+                  itemName: sourceNo
+            queryCode: wms_out_plan_list
+            size: 100
+      extract:
+        - id: body.data.records[0].id
+      validate:
+        - check: body.msg
+          assert: equals
+          expect: 操作成功
+          msg: assert response body msg
+#        - check: ${query_id($id)}
+#          assert: string_equals
+#          expect: $id
+#          msg: id 写入成功

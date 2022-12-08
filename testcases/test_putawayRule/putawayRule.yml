@@ -1,0 +1,92 @@
+config:
+    name: 上架策略项
+    variables: {}
+    verify: false
+teststeps:
+-   name: 新增策略项
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            itemCode: kkw01
+            itemName: 空库位
+            matchIsJudgePickingArea: false
+            remark: 一个空库位策略
+            ruleBinSelectType: 1
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/plc/putaway/rule/save
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 获取列表中的id
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            current: 1
+            paramsList: []
+            queryCode: wms_plc_putaway_rule_list
+            size: 50
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/plc/putaway/rule/list
+    extract:
+      - id: content.data.records[1].id
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 编辑新增策略项
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            id: $id
+            itemCode: kkw01
+            itemName: 空库位
+            matchAreaIds:
+            - '40930757996191745'
+            matchBoxMax: 3
+            matchBoxMin: 1
+            matchBrands: kuqu
+            matchIsJudgePickingArea: false
+            matchSkuAbc:
+            - B
+            matchSkuCodes: []
+            matchSkuStatus:
+            - 1
+            matchZoneIds:
+            - '40923622298173442'
+            remark: 一个空库位策略
+            ruleAppointedAreas:
+            - '40930757996191745'
+            ruleAppointedBinTypes:
+            - 1
+            ruleAppointedZones:
+            - '40923622298173442'
+            ruleBinSelectType: 1
+            ruleBinUseTypes:
+            - 1
+            ruleIsJudgeBinAbc: false
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/plc/putaway/rule/update
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 删除策略项
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            ids:
+            - $id
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/plc/putaway/rule/removeByIds
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功

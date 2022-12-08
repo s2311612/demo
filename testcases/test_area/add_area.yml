@@ -1,0 +1,70 @@
+config:
+    name: 库区测试流程
+    variables: {}
+    verify: false
+teststeps:
+-   name: 添加库区
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            areaCode: A2
+            areaName: A区2
+            areaStatus: 1
+            zoneId: '41296896278462465'
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/area/save
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 获取库区Id
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            current: 1
+            paramsList: []
+            queryCode: wms_bas_area_list
+            size: 50
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/area/listPage
+    extract:
+        - id: content.data.records[1].id
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 更新库区
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            areaCode: A2
+            areaName: A区22
+            areaStatus: 1
+            id: $id
+            remark: ''
+            zoneId: '41296896278462465'
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/area/update
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 删除库区
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            ids:
+            - $id
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/area/removeByIds
+    validate:
+    -   eq:
+        - status_code
+        - 200

@@ -1,0 +1,68 @@
+config:
+    name: 区域测试流程
+    variables: {}
+    verify: false
+teststeps:
+-   name: 新增区域
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            whesName: chengduc
+            zoneCode: chengducang
+            zoneName: 成都
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/zone/save
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 获取列表
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            current: 1
+            paramsList: []
+            queryCode: wms_bas_zone_list
+            size: 50
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/zone/listPage
+    extract:
+        - id: content.data.records[1].id
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 修改区域
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            id: $id
+            remark: ''
+            whesName: chengduc
+            zoneCode: chengducang
+            zoneName: 成都1
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/zone/update
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 删除区域
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            ids:
+            - $id
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/zone/removeByIds
+    validate:
+    -   eq:
+        - status_code
+        - 200

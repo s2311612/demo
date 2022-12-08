@@ -1,0 +1,29 @@
+config:
+    name: testcase description
+    variables: {}
+    verify: false
+teststeps:
+-   name: /api/asura/wms/web/bas/area/listPage
+    request:
+        headers:
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsInVuYW1lIjoiYWRtaW4iLCJ1c2VyT3BlcmF0aW9uIjoyLCJjbGllbnQiOiJQQyIsImlzQWRtaW4iOjEsImFwcENvZGUiOiJXTVMiLCJleHAiOjE2NTgyOTE1NzQ4MDgsImJpekdyb3VwQ29kZSI6ImFzdXJhLXdtcy1jbHVzdGVyIn0.CnyrBUFunWLGKB6gDaWzf5P6ZtoSDkjirLWCCTsKCsQ
+        json:
+            current: 1
+            paramsList: []
+            queryCode: wms_bas_area_list
+            size: 50
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/area/listPage
+    validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - headers.Content-Type
+        - application/json
+    -   eq:
+        - body.code
+        - '0000000'
+    -   eq:
+        - body.msg
+        - 操作成功

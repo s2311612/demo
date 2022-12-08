@@ -1,0 +1,46 @@
+config:
+    name: testcase description
+    variables: {}
+    verify: false
+teststeps:
+-   name: /api/asura/wms/web/bas/zone/save
+    request:
+        cookies:
+            UM_distinctid: 18026ab51ba1101-0b06ab1750c982-1734337f-e1000-18026ab51bb9b8
+        headers:
+            Accept: application/json
+            Accept-Encoding: gzip, deflate
+            Accept-Language: zh-CN,zh;q=0.9
+            Connection: keep-alive
+            Content-Length: '68'
+            Content-Type: application/json;charset=UTF-8
+            Cookie: UM_distinctid=18026ab51ba1101-0b06ab1750c982-1734337f-e1000-18026ab51bb9b8
+            Host: test.asura-wms.ruigushop.com
+            Origin: http://test.asura-wms.ruigushop.com
+            Referer: http://test.asura-wms.ruigushop.com/static/wms/setting/zone
+            User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36
+            business: RG28
+            token: ${ENV(token)}
+        json:
+            whesName: chengduc
+            zoneCode: chengducang
+            zoneName: 成都
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/zone/save
+    validate:
+    -   eq:
+        - status_code
+        - 200
+    -   eq:
+        - headers.Content-Type
+        - application/json
+    -   eq:
+        - body.code
+        - '0000000'
+    -   eq:
+        - body.msg
+        - 操作成功
+    -   eq:
+        - body.data
+        - null

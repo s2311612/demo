@@ -1,0 +1,125 @@
+config:
+    name: 库位测试流程
+    variables: {}
+    verify: false
+teststeps:
+-   name: 新增库位
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            abcType: 1
+            areaId: '40930757996191745'
+            binCode: A001
+            binStatus: 0
+            binType: 1
+            isStorageLimit: 0
+            lotLimitType: 1
+            pickRoute: ac
+            putawayRoute: as
+            storageType: 0
+            useType: 1
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/save
+    validate:
+    -   eq:
+        - status_code
+        - 200
+
+-   name: 获取库位id
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            current: 1
+            paramsList: []
+            queryCode: wms_bas_bin_list
+            size: 50
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/listPage
+    extract:
+        - id: content.data.records[2].id
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 启用库位
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            ids:
+            - $id
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/setEnable
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 停用库位
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            ids:
+            - $id
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/setDisable
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+-   name: 更新库位状态为草稿
+    request:
+        headers:
+            token: ${ENV(token)}
+        json:
+            abcType: 1
+            areaId: '40930757996191745'
+            binCode: A001
+            binStatus: 0
+            binType: 1
+            columnsNo: ''
+            height: '0.000000'
+            id: $id
+            isStorageLimit: 0
+            layersNo: ''
+            length: '0.000000'
+            lotLimitType: 1
+            maxVolume: '0.000000'
+            maxWeight: '0.000000'
+            passage: ''
+            pickRoute: ac
+            putawayRoute: as
+            remark: ''
+            rowsNo: ''
+            saleAreaCode: ''
+            saleAreaLot: ''
+            storageType: 0
+            tradeType: 0
+            useType: 1
+            width: '0.000000'
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/update
+    validate:
+    -   eq:
+        - body.msg
+        - 操作成功
+
+
+- name: 删除库位
+  request:
+      headers:
+          token: ${ENV(token)}
+      json:
+          ids:
+              - $id
+      method: POST
+      url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/bas/bin/removeByIds
+  validate:
+      - eq:
+        - body.msg
+        - 操作成功

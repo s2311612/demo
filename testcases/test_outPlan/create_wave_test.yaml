@@ -1,0 +1,36 @@
+config:
+    name: testcase description
+teststeps:
+    - name: "开始创建波次"
+      request:
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/wave/createWave
+        headers:
+            Content-Type: application/json;charset=UTF-8
+            bid: "1528936961052135425"
+            businesscode: RG20
+            businessname: '%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93'
+            token: ${ENV(token)}
+            trace.id: 1301b31d-2c2f-29e8-863b-a84d4017d592
+        body:
+            orderIds:
+                - "81552004408762370"
+            policyId: "64440030780784642"
+            waveCount: 10
+      validate:
+        - check: status_code
+          assert: equals
+          expect: 200
+          msg: assert response status code
+        - check: headers."Content-Type"
+          assert: equals
+          expect: application/json
+          msg: assert response header Content-Type
+        - check: body.code
+          assert: equals
+          expect: "0000000"
+          msg: assert response body code
+        - check: body.msg
+          assert: equals
+          expect: 操作成功
+          msg: assert response body msg

@@ -1,0 +1,45 @@
+config:
+    name: testcase description
+teststeps:
+    - name: "查询ID"
+      testcase: testcases\test_outPlan\searchId_test.yaml
+
+
+    - name: ""
+      request:
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/pass/doPass
+        headers:
+            Content-Type: application/json;charset=UTF-8
+            bid: "1528936961052135425"
+            businesscode: RG20
+            businessname: '%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93'
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwicmVhbE5hbWUiOiJhZG1pbiIsInVuYW1lIjoiYWRtaW4iLCJ1c2VyT3BlcmF0aW9uIjoyLCJjbGllbnQiOiJQQyIsImlzQWRtaW4iOjEsImFwcENvZGUiOiJXTVMiLCJleHAiOjE2Njc4MjI1NTc3MjUsImJpekdyb3VwQ29kZSI6ImFzdXJhLXdtcy1jbHVzdGVyIn0.ElhEQEw2i_jmxYnLBbyZIK7IM7TN4UxfjR2sd403jg0
+            trace.id: 7b7b2a24-f7f2-7b30-10bb-f757020007d1
+        body:
+            passPlanQty: 1
+            passRule: 1
+            planQty: 1
+            req:
+                _formData:
+                    sourceNo: ${ENV(plan_no)}
+                current: 1
+                paramsList:
+                    - argValue: ${ENV(plan_no)}
+                      itemId: "6049"
+                      itemName: sourceNo
+                queryCode: wms_out_plan_list
+                size: 50
+                sortItemList: []
+            skuKindQty: 10
+            totalVolume: 0
+            totalWeight: 4
+      validate:
+        - check: status_code
+          assert: equals
+          expect: 200
+          msg: assert response status code
+        - check: body.msg
+          assert: equals
+          expect: 操作成功
+          msg: assert response body msg

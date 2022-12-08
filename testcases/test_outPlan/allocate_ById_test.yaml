@@ -1,0 +1,29 @@
+config:
+    name: testcase description
+teststeps:
+    - name: 查询ID
+      testcase: testcases\test_outPlan\searchId_test.yaml
+
+
+    - name: 分配并校验
+      request:
+        method: POST
+        url: http://test.asura-wms.ruigushop.com/api/asura/wms/web/out/allocate/allocateByOrderId
+        headers:
+            Content-Type: application/json;charset=UTF-8
+            bid: "1528936961052135425"
+            businesscode: RG20
+            businessname: '%E5%8D%8E%E5%8D%97%E6%80%BB%E4%BB%93'
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwicmVhbE5hbWUiOiJhZG1pbiIsInVuYW1lIjoiYWRtaW4iLCJ1c2VyT3BlcmF0aW9uIjoyLCJjbGllbnQiOiJQQyIsImlzQWRtaW4iOjEsImFwcENvZGUiOiJXTVMiLCJleHAiOjE2Njc4MjI1NTc3MjUsImJpekdyb3VwQ29kZSI6ImFzdXJhLXdtcy1jbHVzdGVyIn0.ElhEQEw2i_jmxYnLBbyZIK7IM7TN4UxfjR2sd403jg0
+            trace.id: ce3cd770-42a7-2d37-92d1-b97b4f5b76c0
+        body:
+            ids:
+                - $id
+      validate:
+        - check: status_code
+          assert: equals
+          expect: 200
+        - check: body.msg
+          assert: equals
+          expect: 操作成功
+          msg: assert response body msg
